@@ -14,6 +14,10 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch.dispatcher import Signal, _make_id
 from django.utils.translation import ugettext_lazy as _
 
+try:
+    user_model = settings.AUTH_USER_MODEL
+except AttributeError:
+    user_model = User
 
 def deprecated(original, replacement):
     """Decorator that defines a deprecated method."""
@@ -68,7 +72,7 @@ class Revision(models.Model):
                                         verbose_name=_("date created"),
                                         help_text="The date and time this revision was created.")
     
-    user = models.ForeignKey(User,
+    user = models.ForeignKey(user_model,
                              blank=True,
                              null=True,
                              verbose_name=_("user"),
